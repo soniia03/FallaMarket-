@@ -36,7 +36,7 @@ const TrajeForm: React.FC = () => {
               nombre: traje.nombre,
               material: traje.material,
               propietario: traje.propietario,
-              descripcion: traje.descripcion,
+              descripcion: traje.descripcion || '',
               precio: traje.precio,
               disponible: traje.disponible
             });
@@ -80,7 +80,7 @@ const TrajeForm: React.FC = () => {
     setError('');
    
     // Validaciones básicas
-    if (!formData.nombre || !formData.material || !formData.propietario || !formData.descripcion) {
+    if (!formData.nombre || !formData.material || !formData.propietario || !formData.descripcion || formData.precio === undefined) {
       setError('Todos los campos principales son obligatorios.');
       return;
     }
