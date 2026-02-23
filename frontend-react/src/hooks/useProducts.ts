@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
 import { Product, ProductFormData, UseProductsReturn } from '../types';
 
-const API_BASE_URL = 'http://localhost:3000/api/v1';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000/api/v1';
 
 interface ProductApiResponse {
   success: boolean;
