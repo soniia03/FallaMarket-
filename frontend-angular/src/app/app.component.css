@@ -1,0 +1,92 @@
+/* FallaMarket - Estilos globales Angular */
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.375rem;
+}
+
+main {
+  min-height: 70vh;
+}
+
+/* Estilos para productos */
+.product-card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.product-image {
+  height: 200px;
+  object-fit: cover;
+}
+
+.price-tag {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+/* Estilos para categorías */
+.category-badge {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Botones personalizados */
+.btn-fallero {
+  background-color: #ff6b35;
+  border-color: #ff6b35;
+  color: white;
+}
+
+.btn-fallero:hover {
+  background-color: #e55a2d;
+  border-color: #e55a2d;
+  color: white;
+}
+
+/* Estados de productos */
+.condition-nuevo {
+  background-color: #28a745;
+}
+
+.condition-usado {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.condition-reservado {
+  background-color: #17a2b8;
+}
+
+.condition-vendido {
+  background-color: #6c757d;
+}
+
+/* Estilos de loading */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+  
+  .product-card {
+    margin-bottom: 1rem;
+  }
+}

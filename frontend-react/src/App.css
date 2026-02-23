@@ -1,0 +1,225 @@
+/* FallaMarket React - Estilos principales */
+
+:root {
+  --primary-color: #007bff;
+  --fallero-orange: #ff6b35;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --info-color: #17a2b8;
+  --secondary-color: #6c757d;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--dark-color);
+  background-color: #f5f5f5;
+}
+
+.App {
+  text-align: center;
+}
+
+/* Navbar personalizada */
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.375rem;
+}
+
+/* Botón Fallero personalizado */
+.btn-fallero {
+  background-color: var(--fallero-orange);
+  border-color: var(--fallero-orange);
+  color: white;
+  font-weight: 500;
+}
+
+.btn-fallero:hover {
+  background-color: #e55a2d;
+  border-color: #e55a2d;
+  color: white;
+}
+
+/* Estilos específicos para trajes */
+.traje-card {
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.traje-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.material-badge {
+  background: linear-gradient(135deg, var(--info-color), var(--primary-color));
+  color: white;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+}
+
+.propietario-badge {
+  background: linear-gradient(135deg, var(--success-color), #218838);
+  color: white;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+}
+
+/* Hero section */
+.hero-section {
+  background: linear-gradient(135deg, var(--primary-color), var(--fallero-orange));
+  border-radius: 1rem;
+}
+
+/* Categorías de materiales */
+.category-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Tarjetas de productos */
+.product-card {
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.product-image {
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+/* Precios */
+.price-tag {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--success-color);
+}
+
+/* Estados de productos */
+.condition-nuevo {
+  background-color: var(--success-color) !important;
+}
+
+.condition-usado {
+  background-color: var(--warning-color) !important;
+  color: var(--dark-color) !important;
+}
+
+.condition-reservado {
+  background-color: var(--info-color) !important;
+}
+
+.condition-vendido {
+  background-color: var(--secondary-color) !important;
+}
+
+/* Tarjetas de categorías */
+.category-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+/* Hero section */
+.hero-section {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border-radius: 0.5rem;
+}
+
+/* Tarjetas de usuarios */
+.user-card {
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Formularios */
+.form-label {
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+  
+  .product-card,
+  .user-card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Utilidades */
+.text-shadow {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}

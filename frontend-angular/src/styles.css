@@ -1,0 +1,230 @@
+/* FallaMarket - Estilos globales */
+
+/* Importar Bootstrap */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+/* Variables personalizadas */
+:root {
+  --primary-color: #007bff;
+  --fallero-orange: #ff6b35;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --info-color: #17a2b8;
+  --secondary-color: #6c757d;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+}
+
+/* Reset y configuración base */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--dark-color);
+  background-color: #f5f5f5;
+}
+
+/* Estilos personalizados para la aplicación */
+.btn-fallero {
+  background-color: var(--fallero-orange);
+  border-color: var(--fallero-orange);
+  color: white;
+  font-weight: 500;
+}
+
+.btn-fallero:hover {
+  background-color: #e55a2d;
+  border-color: #e55a2d;
+  color: white;
+}
+
+.text-fallero {
+  color: var(--fallero-orange);
+}
+
+.bg-fallero {
+  background-color: var(--fallero-orange);
+}
+
+/* Tarjetas de productos */
+.product-card {
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.product-image {
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+/* Precios */
+.price-tag {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--success-color);
+}
+
+/* Badges de categorías */
+.category-badge {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+/* Estados de productos */
+.condition-nuevo {
+  background-color: var(--success-color) !important;
+}
+
+.condition-usado {
+  background-color: var(--warning-color) !important;
+  color: var(--dark-color) !important;
+}
+
+.condition-reservado {
+  background-color: var(--info-color) !important;
+}
+
+.condition-vendido {
+  background-color: var(--secondary-color) !important;
+}
+
+/* Tarjetas de usuarios */
+.user-card {
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Loading spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+/* Navegación */
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.nav-link {
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.375rem;
+}
+
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+}
+
+/* Formularios */
+.form-label {
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+  
+  .product-card,
+  .user-card {
+    margin-bottom: 1rem;
+  }
+  
+  .btn {
+    font-size: 0.875rem;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Utilidades personalizadas */
+.shadow-custom {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.border-fallero {
+  border-color: var(--fallero-orange) !important;
+}
+
+.text-shadow {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Mejoras de accesibilidad */
+.btn:focus,
+.form-control:focus,
+.form-select:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .navbar,
+  .btn,
+  footer {
+    display: none !important;
+  }
+  
+  .container {
+    margin: 0;
+    padding: 0;
+    max-width: none;
+  }
+}
