@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map, catchError } from 'rxjs';
-import { Traje, BackendResponse, MaterialInfo, TipoTrajeInfo } from '../models/interfaces';
+import { Traje, BackendResponse, MaterialInfo, TipoTrajeInfo, PaginatedResponse } from '../models/interfaces';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -25,6 +25,20 @@ export class TrajeService {
       catchError(error => {
         console.error('Error obteniendo trajes:', error);
         return [];
+      })
+    );
+  }
+
+  // Obtener trajes con paginación
+  getTrajesPaginated(page: number = 1, limit: number = 10): Observable<PaginatedResponse<Traje[]>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    return this.http.get<PaginatedResponse<Traje[]>>(this.apiUrl, { params }).pipe(
+      catchError(error => {
+        console.error('Error obteniendo trajes paginados:', error);
+        throw error;
       })
     );
   }

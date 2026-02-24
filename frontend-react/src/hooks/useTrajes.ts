@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios, { AxiosError } from 'axios';
-import { Traje, TrajeFormData, UseTrajesReturn, ApiResponse } from '../types';
+import { Traje, TrajeFormData, UseTrajesReturn, ApiResponse, PaginatedApiResponse, PaginationInfo } from '../types';
 
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
@@ -10,14 +10,26 @@ export const useTrajes = (): UseTrajesReturn => {
   const [trajes, setTrajes] = useState<Traje[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [pagination, setPagination] = useState<PaginationInfo | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
 
   const fetchTrajes = useCallback(async (): Promise<void> => {
     try {
       setLoading(true);
-      const response = await axios.get<ApiResponse<Traje[]>>(`${API_BASE_URL}/trajes/`);
+      const response = await axios.get<PaginatedApiResponse<Traje[]>>(
+        `${API_BASE_URL}/trajes/`,
+        {
+          params: {
+            page: currentPage,
+            limit: itemsPerPage
+          }
+        }
+      );
       if (response.data.status) {
         setTrajes(response.data.status as Traje[]);
+        setPagination(response.data.pagination);
       }
     } catch (err) {
       const errorMessage = (err as AxiosError).message;
@@ -26,7 +38,7 @@ export const useTrajes = (): UseTrajesReturn => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [currentPage, itemsPerPage]);
 
 
   useEffect(() => {
@@ -89,14 +101,29 @@ export const useTrajes = (): UseTrajesReturn => {
   }, []);
 
 
+  const changePage = useCallback((page: number): void => {
+    setCurrentPage(page);
+  }, []);
+
+  const changeItemsPerPage = useCallback((limit: number): void => {
+    setItemsPerPage(limit);
+    setCurrentPage(1); // Resetear a la primera página
+  }, []);
+
+
   return {
     trajes,
     loading,
     error,
+    pagination,
+    currentPage,
+    itemsPerPage,
     createTraje,
     updateTraje,
     deleteTraje,
     getTrajeById,
+    changePage,
+    changeItemsPerPage,
     refetch: fetchTrajes
   };
 };

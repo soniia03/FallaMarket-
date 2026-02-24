@@ -49,6 +49,22 @@ export interface MaterialInfo {
   color: string;
 }
 
+// Información de paginación
+export interface PaginationInfo {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+// Respuesta con paginación
+export interface PaginatedResponse<T> {
+  status: T;
+  pagination: PaginationInfo;
+}
+
 // Estados o tipos de trajes
 export interface TipoTrajeInfo {
   key: string;

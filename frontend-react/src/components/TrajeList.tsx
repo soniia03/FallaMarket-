@@ -5,7 +5,7 @@ import { Traje } from '../types';
 
 
 const TrajeList: React.FC = () => {
-  const { trajes, loading, error, deleteTraje } = useTrajes();
+  const { trajes, loading, error, deleteTraje, pagination, currentPage, itemsPerPage, changePage, changeItemsPerPage } = useTrajes();
   const [searchTerm, setSearchTerm] = useState<string>('');
 
 
@@ -226,6 +226,55 @@ const TrajeList: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Paginación */}
+      {pagination && pagination.total > 0 && (
+        <div className="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
+          <div className="text-muted">
+            Mostrando {(currentPage - 1) * itemsPerPage + 1} - 
+            {Math.min(currentPage * itemsPerPage, pagination.total)} de {pagination.total} trajes
+          </div>
+          
+          <div className="btn-group">
+            <button 
+              className="btn btn-sm btn-outline-primary" 
+              disabled={!pagination.hasPrevPage}
+              onClick={() => changePage(currentPage - 1)}>
+              <i className="fas fa-chevron-left"></i> Anterior
+            </button>
+            {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(page => {
+              if (pagination.totalPages > 10 && (page < currentPage - 2 || page > currentPage + 2)) {
+                return null;
+              }
+              return (
+                <button
+                  key={page}
+                  className={`btn btn-sm btn-outline-primary ${currentPage === page ? 'active' : ''}`}
+                  onClick={() => changePage(page)}>
+                  {page}
+                </button>
+              );
+            })}
+            <button 
+              className="btn btn-sm btn-outline-primary" 
+              disabled={!pagination.hasNextPage}
+              onClick={() => changePage(currentPage + 1)}>
+              Siguiente <i className="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          
+          <select 
+            className="form-select form-select-sm" 
+            style={{ width: 'auto' }}
+            value={itemsPerPage}
+            onChange={(e) => changeItemsPerPage(Number(e.target.value))}>
+            <option value={5}>5 por página</option>
+            <option value={10}>10 por página</option>
+            <option value={20}>20 por página</option>
+            <option value={50}>50 por página</option>
+          </select>
         </div>
       )}
     </div>

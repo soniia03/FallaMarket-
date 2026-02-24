@@ -25,6 +25,23 @@ export interface ApiResponse<T> {
   status: string | T;
   data?: T;
   message?: string;
+  pagination?: PaginationInfo;
+}
+
+// Información de paginación
+export interface PaginationInfo {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+// Respuesta paginada
+export interface PaginatedApiResponse<T> {
+  status: T;
+  pagination: PaginationInfo;
 }
 
 export interface Stats {
@@ -76,10 +93,15 @@ export interface UseTrajesReturn {
   trajes: Traje[];
   loading: boolean;
   error: string | null;
+  pagination: PaginationInfo | null;
+  currentPage: number;
+  itemsPerPage: number;
   createTraje: (trajeData: TrajeFormData) => Promise<Traje | undefined>;
   updateTraje: (id: string, trajeData: TrajeFormData) => Promise<Traje | undefined>;
   deleteTraje: (id: string) => Promise<boolean | undefined>;
   getTrajeById: (id: string) => Promise<Traje | undefined>;
+  changePage: (page: number) => void;
+  changeItemsPerPage: (limit: number) => void;
   refetch: () => Promise<void>;
 }
 

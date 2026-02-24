@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TrajeService } from '../../services/product.service';
-import { Traje, MaterialInfo } from '../../models/interfaces';
+import { Traje, MaterialInfo, PaginationInfo } from '../../models/interfaces';
 
 @Component({
   selector: 'app-traje-list',
@@ -144,6 +144,47 @@ import { Traje, MaterialInfo } from '../../models/interfaces';
       </div>
     </div>
 
+    <!-- Paginación -->
+    <div class="d-flex justify-content-between align-items-center mt-4" *ngIf="pagination && pagination.total > 0">
+      <div>
+        <span class="text-muted">
+          Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} - 
+          {{ Math.min(currentPage * itemsPerPage, pagination.total) }} 
+          de {{ pagination.total }} trajes
+        </span>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn btn-sm btn-outline-primary" 
+                [disabled]="!pagination.hasPrevPage"
+                (click)="changePage(currentPage - 1)">
+          <i class="fas fa-chevron-left"></i> Anterior
+        </button>
+        <button class="btn btn-sm btn-outline-primary" 
+                *ngFor="let page of [].constructor(pagination.totalPages); let i = index"
+                [class.active]="currentPage === i + 1"
+                (click)="changePage(i + 1)"
+                [hidden]="pagination.totalPages > 10 && (i + 1 < currentPage - 2 || i + 1 > currentPage + 2)">
+          {{ i + 1 }}
+        </button>
+        <button class="btn btn-sm btn-outline-primary" 
+                [disabled]="!pagination.hasNextPage"
+                (click)="changePage(currentPage + 1)">
+          Siguiente <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      
+      <select class="form-select form-select-sm" 
+              style="width: auto;"
+              [(ngModel)]="itemsPerPage"
+              (change)="changeItemsPerPage(itemsPerPage)">
+        <option [value]="5">5 por página</option>
+        <option [value]="10">10 por página</option>
+        <option [value]="20">20 por página</option>
+        <option [value]="50">50 por página</option>
+      </select>
+    </div>
+
     <!-- Estado de carga -->
     <div class="text-center" *ngIf="loading">
       <div class="loading-spinner">
@@ -209,6 +250,12 @@ export class TrajeListComponent implements OnInit {
   filteredTrajes: Traje[] = [];
   materiales: MaterialInfo[] = [];
   loading = true;
+  Math = Math; // Para usar en el template
+
+  // Paginación
+  currentPage = 1;
+  itemsPerPage = 10;
+  pagination: PaginationInfo | null = null;
 
   // Filtros
   searchTerm = '';
@@ -241,9 +288,10 @@ export class TrajeListComponent implements OnInit {
 
   loadTrajes(): void {
     this.loading = true;
-    this.trajeService.getAllTrajes().subscribe({
-      next: (trajes) => {
-        this.trajes = trajes;
+    this.trajeService.getTrajesPaginated(this.currentPage, this.itemsPerPage).subscribe({
+      next: (response) => {
+        this.trajes = response.status;
+        this.pagination = response.pagination;
         this.applyFilters();
         this.loading = false;
       },
@@ -252,6 +300,17 @@ export class TrajeListComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  changePage(page: number): void {
+    this.currentPage = page;
+    this.loadTrajes();
+  }
+
+  changeItemsPerPage(limit: number): void {
+    this.itemsPerPage = limit;
+    this.currentPage = 1;
+    this.loadTrajes();
   }
 
   applyFilters(): void {
