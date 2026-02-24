@@ -1,3 +1,7 @@
 {
+  "framework": "create-react-app",
+  "installCommand": "npm install --legacy-peer-deps",
+  "buildCommand": null,
+  "outputDirectory": "build",
   "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }
