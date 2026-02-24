@@ -269,13 +269,11 @@ npm install
 npm start
 ```
 
-## URLs de Acceso
-
-- **API Backend**: http://localhost:3000
-- **Frontend Angular**: http://localhost:4200
-- **Frontend React**: http://localhost:3001
-- **XAMPP**: http://localhost/FallaMarket/
-
+## 🌐 URLs de Producción
+- **API Backend**: https://falleros.vercel.app/api/v1/
+- **Frontend Angular**: https://fallerosangular.vercel.app/
+- **Frontend React**: https://falleros-react.vercel.app/
+  
 ## Tecnologías Utilizadas
 
 ### Backend
