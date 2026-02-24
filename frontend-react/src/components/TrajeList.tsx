@@ -64,7 +64,7 @@ const TrajeList: React.FC = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h2><i className="fas fa-crown me-2 text-warning"></i>Trajes Falleros</h2>
-          <p className="text-muted">Total: {filteredTrajes.length} trajes</p>
+          <p className="text-muted">Total: {pagination?.total || 0} trajes</p>
         </div>
         <Link to="/trajes/add" className="btn btn-primary">
           <i className="fas fa-plus me-2"></i>Agregar Traje

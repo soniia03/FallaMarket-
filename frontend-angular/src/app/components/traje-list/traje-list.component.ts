@@ -14,8 +14,8 @@ import { Traje, MaterialInfo, PaginationInfo } from '../../models/interfaces';
       <h2>
         <i class="fas fa-tshirt me-2"></i>
         Trajes Disponibles
-        <span class="badge bg-primary ms-2" *ngIf="filteredTrajes.length > 0">
-          {{ filteredTrajes.length }}
+        <span class="badge bg-primary ms-2" *ngIf="pagination">
+          {{ pagination.total }}
         </span>
       </h2>
       <a routerLink="/trajes/add" class="btn btn-fallero">
