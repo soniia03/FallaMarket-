@@ -4,7 +4,7 @@ import { useTrajes } from '../hooks/useTrajes';
 import { Stats, Material } from '../types';
 
 const Home: React.FC = () => {
-  const { trajes, loading: trajesLoading } = useTrajes();
+  const { trajes, loading: trajesLoading, changeItemsPerPage, pagination } = useTrajes();
   const [featuredTrajes, setFeaturedTrajes] = useState<Array<any>>([]);
   const [stats, setStats] = useState<Stats>({
     totalTrajes: 0,
@@ -20,6 +20,11 @@ const Home: React.FC = () => {
     { key: 'Lentejuela', label: 'Lentejuela', icon: 'fas fa-sparkles', color: 'danger' }
   ];
 
+  // Cargar todos los trajes al montar el componente
+  useEffect(() => {
+    changeItemsPerPage(0); // 0 = todos los trajes
+  }, []);
+
   useEffect(() => {
     if (trajes && trajes.length > 0) {
       // Calcular estadísticas
@@ -27,7 +32,7 @@ const Home: React.FC = () => {
       const propietariosUnicos = [...new Set(trajes.map(t => t.propietario))].length;
       
       setStats({
-        totalTrajes: trajes.length,
+        totalTrajes: pagination?.total || trajes.length,
         materialesUnicos,
         propietariosUnicos
       });
@@ -38,7 +43,7 @@ const Home: React.FC = () => {
         .slice(0, 4);
       setFeaturedTrajes(featured);
     }
-  }, [trajes]);
+  }, [trajes, pagination]);
 
   const getMaterialCount = (materialKey: string): number => {
     return featuredTrajes.filter(t => t.material === materialKey).length;
