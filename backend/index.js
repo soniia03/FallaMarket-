@@ -24,7 +24,13 @@ app.use('/', (req, res) => res.send('API is in /api/v1/trajes/'));
 
 //Settings
 app.set('port', process.env.PORT || 3000);
-//iniciar el server
-app.listen(app.get('port'),() =>{
-    console.log('Server on port', app.get('port'));
-})
+
+// Para desarrollo local
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(app.get('port'),() =>{
+        console.log('Server on port', app.get('port'));
+    });
+}
+
+// Para Vercel
+module.exports = app;
