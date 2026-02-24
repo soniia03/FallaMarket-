@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx react-scripts build",
+  "buildCommand": "node ./node_modules/.bin/react-scripts build",
   "outputDirectory": "build",
   "framework": null,
   "rewrites": [{ "source": "/(.*)", "destination": "/" }]
