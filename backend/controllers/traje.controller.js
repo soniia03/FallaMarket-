@@ -40,7 +40,11 @@ trajeCtrl.getTrajes = async (req, res) => {
             }
         });
     } catch (err) {
-        return res.status(400).json({ status: err });
+        console.error('Error al obtener trajes:', err);
+        return res.status(400).json({ 
+            status: 'Error al obtener los trajes',
+            message: err.message || 'Error desconocido'
+        });
     }
 };
 
@@ -67,7 +71,11 @@ trajeCtrl.getTraje = async (req, res) => {
         }
         return res.status(200).json({ status: 'Traje encontrado correctamente', data });
     } catch (err) {
-        return res.status(400).json({ status: err });
+        console.error('Error al obtener traje:', err);
+        return res.status(400).json({ 
+            status: 'Error al obtener el traje',
+            message: err.message || 'Error desconocido'
+        });
     }
 };
 
@@ -90,7 +98,11 @@ trajeCtrl.addTraje = async (req, res) => {
         // enviamos el documento completo; incluirá createdAt/updatedAt automáticamente
         return res.status(200).json({status: 'Traje agregado correctamente', data: saved});
     } catch (err) {
-        return res.status(400).json({status: err});
+        console.error('Error al agregar traje:', err);
+        return res.status(400).json({ 
+            status: 'Error al agregar el traje',
+            message: err.message || 'Error desconocido'
+        });
     }
 };
 
@@ -126,7 +138,11 @@ trajeCtrl.updateTraje = async (req, res) => {
         }
         return res.status(200).json({ status: 'Traje actualizado correctamente', data });
     } catch (err) {
-        return res.status(400).json({ status: err });
+        console.error('Error al actualizar traje:', err);
+        return res.status(400).json({ 
+            status: 'Error al actualizar el traje',
+            message: err.message || 'Error desconocido'
+        });
     }
 };
 
@@ -153,7 +169,11 @@ trajeCtrl.deleteTraje = async (req, res) => {
         }
         return res.status(200).json({ status: 'Traje eliminado correctamente' });
     } catch (err) {
-        return res.status(400).json({ status: err });
+        console.error('Error al eliminar traje:', err);
+        return res.status(400).json({ 
+            status: 'Error al eliminar el traje',
+            message: err.message || 'Error desconocido'
+        });
     }
 };
 

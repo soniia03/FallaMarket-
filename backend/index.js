@@ -20,7 +20,19 @@ app.use(express.json());
 app.use('/api/v1/trajes', require('./routes/traje.route'));
 app.use('/', (req, res) => res.send('API is in /api/v1/trajes/'));
 
+// Manejador de errores global
+app.use((err, req, res, next) => {
+    console.error('Error no manejado:', err);
+    res.status(500).json({ 
+        status: 'Error interno del servidor',
+        message: err.message || 'Error desconocido'
+    });
+});
 
+// Manejador de rutas no encontradas
+app.use((req, res) => {
+    res.status(404).json({ status: 'Ruta no encontrada' });
+});
 
 //Settings
 app.set('port', process.env.PORT || 3000);
