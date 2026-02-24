@@ -4,11 +4,44 @@ const trajeCtrl = {};
 
 //Funciones CRUD
 
-// Obtener todas los trajes FUNCIONA
+// Obtener todas los trajes con paginación FUNCIONA
 trajeCtrl.getTrajes = async (req, res) => {
-    const trajes = await Traje.find()
-        .then((data)=>res.status(200).json({status:data}))
-        .catch((err)=>res.status(400).json({status:err}));
+    try {
+        // Obtener parámetros de paginación de la query
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        
+        // Calcular el skip
+        const skip = (page - 1) * limit;
+        
+        // Obtener el total de documentos
+        const total = await Traje.countDocuments();
+        
+        // Obtener los trajes con paginación
+        const trajes = await Traje.find()
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 }); // Ordenar por más recientes primero
+        
+        // Calcular información de paginación
+        const totalPages = Math.ceil(total / limit);
+        const hasNextPage = page < totalPages;
+        const hasPrevPage = page > 1;
+        
+        return res.status(200).json({
+            status: trajes,
+            pagination: {
+                total,
+                page,
+                limit,
+                totalPages,
+                hasNextPage,
+                hasPrevPage
+            }
+        });
+    } catch (err) {
+        return res.status(400).json({ status: err });
+    }
 };
 
 // Obtener un traje por su ID  FUNCIONA 
@@ -41,7 +74,7 @@ trajeCtrl.getTraje = async (req, res) => {
 // Agregar un nuevo traje   FUNCIONA 
 trajeCtrl.addTraje = async (req, res) => {
     const { nombre, material, propietario, descripcion, precio, disponible } = req.body;
-    if (!nombre || !material || !propietario || !descripcion || !precio || !disponible) {
+    if (!nombre || !material || !propietario || !descripcion || precio === undefined || disponible === undefined) {
         return res.status(400).json({status: 'Faltan campos: nombre, material, propietario, descripcion, precio o disponible'});
     }
 
