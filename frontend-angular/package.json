@@ -32,5 +32,8 @@
     "@angular/compiler-cli": "^17.0.0",
     "@types/node": "^18.7.0",
     "typescript": "~5.2.0"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }
