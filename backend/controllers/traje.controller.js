@@ -77,14 +77,14 @@ trajeCtrl.updateTraje = async (req, res) => {
     }
 
     // Desestructuramos los campos esperados en el body
-    const { nombre, material, propietario } = req.body;
+    const { nombre, material, propietario, descripcion, precio, disponible } = req.body;
 
     // Verificar que los campos requeridos estén presentes
-    if (!nombre || !material || !propietario) {
-        return res.status(400).json({ status: 'Faltan campos: nombre, material o propietario' });
+    if (!nombre || !material || !propietario || !descripcion || precio === undefined || disponible === undefined) {
+        return res.status(400).json({ status: 'Faltan campos: nombre, material, propietario, descripcion, precio o disponible' });
     }
 
-    const update = { nombre, material, propietario, updatedAt: Date.now() };
+    const update = { nombre, material, propietario, descripcion, precio, disponible, updatedAt: Date.now() };
     try {
         const data = await Traje.findByIdAndUpdate(id, update, { new: true });
         if (!data) {
