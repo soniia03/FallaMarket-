@@ -170,8 +170,10 @@ export class HomeComponent implements OnInit {
 
   loadTrajes(): void {
     this.loading = true;
-    this.trajeService.getAllTrajes().subscribe({
-      next: (trajes) => {
+    // Obtener todos los trajes sin paginación (limit=0)
+    this.trajeService.getTrajesPaginated(1, 0).subscribe({
+      next: (response) => {
+        const trajes = response.status;
         this.calculateStats(trajes);
         // Mostrar los 4 trajes más recientes
         this.recentTrajes = trajes
