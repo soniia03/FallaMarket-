@@ -104,7 +104,7 @@ const TrajeList: React.FC = () => {
       ) : (
         <div className="row">
           {filteredTrajes.map((traje: Traje) => (
-            <div key={traje.id} className="col-lg-6 mb-4">
+            <div key={traje._id} className="col-lg-6 mb-4">
               <div className="card h-100 shadow-sm border-0">
                 <div className="card-body">
                   <div className="d-flex justify-content-between align-items-start mb-3">
@@ -120,12 +120,12 @@ const TrajeList: React.FC = () => {
                       </button>
                       <ul className="dropdown-menu">
                         <li>
-                          <Link to={`/trajes/${traje.id}`} className="dropdown-item">
+                          <Link to={`/trajes/${traje._id}`} className="dropdown-item">
                             <i className="fas fa-eye me-2"></i>Ver detalles
                           </Link>
                         </li>
                         <li>
-                          <Link to={`/trajes/edit/${traje.id}`} className="dropdown-item">
+                          <Link to={`/trajes/edit/${traje._id}`} className="dropdown-item">
                             <i className="fas fa-edit me-2"></i>Editar
                           </Link>
                         </li>
@@ -133,7 +133,7 @@ const TrajeList: React.FC = () => {
                         <li>
                           <button
                             className="dropdown-item text-danger"
-                            onClick={() => handleDelete(traje.id, traje.nombre)}
+                            onClick={() => handleDelete(traje._id, traje.nombre)}
                           >
                             <i className="fas fa-trash me-2"></i>Eliminar
                           </button>
@@ -215,10 +215,10 @@ const TrajeList: React.FC = () => {
                 </div>
                 <div className="card-footer bg-transparent">
                   <div className="d-flex gap-2">
-                    <Link to={`/trajes/${traje.id}`} className="btn btn-outline-primary btn-sm flex-grow-1">
+                    <Link to={`/trajes/${traje._id}`} className="btn btn-outline-primary btn-sm flex-grow-1">
                       <i className="fas fa-eye me-1"></i>Ver
                     </Link>
-                    <Link to={`/trajes/edit/${traje.id}`} className="btn btn-outline-warning btn-sm flex-grow-1">
+                    <Link to={`/trajes/edit/${traje._id}`} className="btn btn-outline-warning btn-sm flex-grow-1">
                       <i className="fas fa-edit me-1"></i>Editar
                     </Link>
                   </div>

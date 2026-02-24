@@ -145,7 +145,7 @@ const TrajeDetail: React.FC = () => {
                   {traje.nombre}
                 </h2>
                 <span className="badge bg-light text-dark fs-6">
-                  ID: {traje.id}
+                  ID: {traje._id}
                 </span>
               </div>
             </div>
@@ -265,7 +265,7 @@ const TrajeDetail: React.FC = () => {
             <div className="card-body">
               <div className="d-grid gap-2">
                 <Link
-                  to={`/trajes/edit/${traje.id}`}
+                  to={`/trajes/edit/${traje._id}`}
                   className="btn btn-warning btn-lg"
                 >
                   <i className="fas fa-edit me-2"></i>

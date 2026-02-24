@@ -1,5 +1,5 @@
 export interface Traje {
-  id: string;
+  _id: string;
   nombre: string;
   material: string;
   propietario: string;
@@ -41,7 +41,7 @@ export interface Material {
 }
 
 export interface Product {
-  id: string;
+  _id: string;
   name: string;
   description?: string;
   price: number;
