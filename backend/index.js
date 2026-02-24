@@ -1,4 +1,4 @@
-// console.log("Hola desde el backend");
+// Backend API para FallaMarket
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
