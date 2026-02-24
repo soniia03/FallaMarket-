@@ -9,13 +9,36 @@ trajeCtrl.getTrajes = async (req, res) => {
     try {
         // Obtener parámetros de paginación de la query
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        
-        // Calcular el skip
-        const skip = (page - 1) * limit;
+        let limit = parseInt(req.query.limit) || 10;
         
         // Obtener el total de documentos
         const total = await Traje.countDocuments();
+        
+        // Si limit es 0 o -1, devolver todos los datos sin paginación
+        if (limit === 0 || limit === -1) {
+            const trajes = await Traje.find()
+                .sort({ createdAt: -1 });
+            
+            return res.status(200).json({
+                status: trajes,
+                pagination: {
+                    total,
+                    page: 1,
+                    limit: total,
+                    totalPages: 1,
+                    hasNextPage: false,
+                    hasPrevPage: false
+                }
+            });
+        }
+        
+        // Limitar el máximo a 100 elementos por página
+        if (limit > 100) {
+            limit = 100;
+        }
+        
+        // Calcular el skip
+        const skip = (page - 1) * limit;
         
         // Obtener los trajes con paginación
         const trajes = await Traje.find()
