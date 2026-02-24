@@ -25,7 +25,6 @@
   "scripts": {
     "start": "set BROWSER=none && set PORT=3001 && react-scripts start",
     "build": "react-scripts build",
-    "vercel-build": "CI=false npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
