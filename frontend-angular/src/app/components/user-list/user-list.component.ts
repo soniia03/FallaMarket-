@@ -79,9 +79,9 @@ import { User } from '../../models/interfaces';
           <div class="card-footer">
             <div class="d-flex gap-2 justify-content-between">
               <button class="btn btn-outline-info btn-sm flex-fill"
-                      (click)="viewUserProducts(user)">
+                      (click)="viewUserTrajes(user)">
                 <i class="fas fa-tshirt me-1"></i>
-                Productos
+                Trajes
               </button>
               
               <button class="btn btn-outline-primary btn-sm flex-fill"
@@ -129,46 +129,45 @@ import { User } from '../../models/interfaces';
       </p>
     </div>
 
-    <!-- Modal para productos del usuario -->
+    <!-- Modal para trajes del usuario -->
     <div class="modal fade" 
-         id="userProductsModal" 
+         id="userTrajesModal" 
          tabindex="-1" 
-         *ngIf="selectedUser && userProducts">
+         *ngIf="selectedUser && userTrajes">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">
-              <i class="fas fa-tshirt me-2"></i>
-              Productos de {{ selectedUser.name }}
+              <i class="fas fa-crown me-2"></i>
+              Trajes de {{ selectedUser.name }}
             </h5>
             <button type="button" 
                     class="btn-close" 
                     data-bs-dismiss="modal"
-                    (click)="closeProductsModal()"></button>
+                    (click)="closeTrajesModal()"></button>
           </div>
           <div class="modal-body">
-            <div *ngIf="userProducts.length > 0">
+            <div *ngIf="userTrajes.length > 0">
               <div class="row">
-                <div class="col-md-6 mb-3" *ngFor="let product of userProducts">
+                <div class="col-md-6 mb-3" *ngFor="let traje of userTrajes">
                   <div class="card">
                     <div class="card-body">
-                      <h6 class="card-title">{{ product.name }}</h6>
+                      <h6 class="card-title">{{ traje.nombre }}</h6>
                       <p class="card-text small text-muted">
-                        {{ product.description | slice:0:60 }}...
+                        {{ traje.descripcion | slice:0:60 }}...
                       </p>
                       <div class="d-flex justify-content-between align-items-center">
                         <span class="fw-bold text-success">
-                          {{ formatPrice(product.price) }}
+                          {{ formatPrice(traje.precio) }}
                         </span>
-                        <span class="badge" 
-                              [ngClass]="'bg-' + getCategoryColor(product.category)">
-                          {{ product.category }}
+                        <span class="badge bg-info">
+                          {{ traje.material }}
                         </span>
                       </div>
-                      <a [routerLink]="['/products', product._id]" 
+                      <a [routerLink]="['/trajes', traje._id]" 
                          class="btn btn-primary btn-sm mt-2 w-100"
                          data-bs-dismiss="modal"
-                         (click)="closeProductsModal()">
+                         (click)="closeTrajesModal()">
                         Ver Detalles
                       </a>
                     </div>
@@ -176,9 +175,9 @@ import { User } from '../../models/interfaces';
                 </div>
               </div>
             </div>
-            <div *ngIf="userProducts.length === 0" class="text-center py-4">
-              <i class="fas fa-inbox fa-2x text-muted mb-3"></i>
-              <p class="text-muted">Este usuario no tiene productos publicados</p>
+            <div *ngIf="userTrajes.length === 0" class="text-center py-4">
+              <i class="fas fa-crown fa-2x text-muted mb-3"></i>
+              <p class="text-muted">Este usuario no tiene trajes registrados</p>
             </div>
           </div>
         </div>
@@ -190,7 +189,7 @@ export class UserListComponent implements OnInit {
   users: User[] = [];
   filteredUsers: User[] = [];
   selectedUser: User | null = null;
-  userProducts: any[] = [];
+  userTrajes: any[] = [];
   showActiveOnly = false;
   loading = true;
 
@@ -230,33 +229,33 @@ export class UserListComponent implements OnInit {
     this.applyFilters();
   }
 
-  viewUserProducts(user: User): void {
+  viewUserTrajes(user: User): void {
     if (!user._id) return;
     
     this.selectedUser = user;
     this.userService.getUserProducts(user._id).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         if (response.success && response.data) {
-          this.userProducts = response.data;
+          this.userTrajes = response.data;
         } else {
-          this.userProducts = [];
+          this.userTrajes = [];
         }
         // Abrir el modal
         const modal = new (window as any).bootstrap.Modal(
-          document.getElementById('userProductsModal')
+          document.getElementById('userTrajesModal')
         );
         modal.show();
       },
-      error: (error) => {
-        console.error('Error loading user products:', error);
-        this.userProducts = [];
+      error: (error: any) => {
+        console.error('Error loading user trajes:', error);
+        this.userTrajes = [];
       }
     });
   }
 
-  closeProductsModal(): void {
+  closeTrajesModal(): void {
     this.selectedUser = null;
-    this.userProducts = [];
+    this.userTrajes = [];
   }
 
   contactUser(user: User): void {
@@ -300,17 +299,9 @@ export class UserListComponent implements OnInit {
   }
 
   formatPrice(price: number): string {
-    return `${price.toFixed(2)}€`;
-  }
-
-  getCategoryColor(category: string): string {
-    const categoryMap: { [key: string]: string } = {
-      'traje-fallero': 'primary',
-      'traje-fallera': 'info',
-      'complementos': 'warning',
-      'calzado': 'success',
-      'accesorios': 'danger'
-    };
-    return categoryMap[category] || 'secondary';
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(price);
   }
 }
