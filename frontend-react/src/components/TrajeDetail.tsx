@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useTrajes } from '../hooks/useTrajes';
+import { useTrajes } from '../components2/useTrajes';
 import { Traje } from '../types';
 
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useTrajes } from '../hooks/useTrajes';
+import { useTrajes } from '../components2/useTrajes';
 import { TrajeFormData } from '../types';
+import { validateTrajeForm, hasValidationErrors, ValidationErrors } from '../components2/validation';
 
 
 const TrajeForm: React.FC = () => {
@@ -23,6 +24,7 @@ const TrajeForm: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
 
 
   useEffect(() => {
@@ -78,15 +80,14 @@ const TrajeForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setError('');
+    setValidationErrors({});
    
-    // Validaciones básicas
-    if (!formData.nombre || !formData.material || !formData.propietario || !formData.descripcion || formData.precio === undefined) {
-      setError('Todos los campos principales son obligatorios.');
-      return;
-    }
-   
-    if (formData.precio < 0) {
-      setError('El precio no puede ser negativo.');
+    // Validaciones mejoradas
+    const errors = validateTrajeForm(formData);
+    
+    if (hasValidationErrors(errors)) {
+      setValidationErrors(errors);
+      setError('Por favor, corrige los errores en el formulario.');
       return;
     }
 
@@ -149,7 +150,7 @@ const TrajeForm: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  className="form-control form-control-lg"
+                  className={`form-control form-control-lg ${validationErrors.nombre ? 'is-invalid' : ''}`}
                   id="nombre"
                   name="nombre"
                   value={formData.nombre}
@@ -157,8 +158,13 @@ const TrajeForm: React.FC = () => {
                   placeholder="Ej: Traje Fallera Mayor, Traje Infantil..."
                   required
                 />
+                {validationErrors.nombre && (
+                  <div className="invalid-feedback">
+                    {validationErrors.nombre}
+                  </div>
+                )}
                 <div className="form-text">
-                  Introduce un nombre descriptivo para el traje.
+                  Introduce un nombre descriptivo para el traje (mínimo 3 caracteres).
                 </div>
               </div>
 
@@ -210,7 +216,7 @@ const TrajeForm: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  className="form-control form-control-lg"
+                  className={`form-control form-control-lg ${validationErrors.propietario ? 'is-invalid' : ''}`}
                   id="propietario"
                   name="propietario"
                   value={formData.propietario}
@@ -218,8 +224,13 @@ const TrajeForm: React.FC = () => {
                   placeholder="Ej: María Carmen López"
                   required
                 />
+                {validationErrors.propietario && (
+                  <div className="invalid-feedback">
+                    {validationErrors.propietario}
+                  </div>
+                )}
                 <div className="form-text">
-                  Nombre de la persona propietaria del traje.
+                  Nombre de la persona propietaria del traje (mínimo 2 caracteres).
                 </div>
               </div>
 
@@ -231,7 +242,7 @@ const TrajeForm: React.FC = () => {
                   Descripción *
                 </label>
                 <textarea
-                  className="form-control form-control-lg"
+                  className={`form-control form-control-lg ${validationErrors.descripcion ? 'is-invalid' : ''}`}
                   id="descripcion"
                   name="descripcion"
                   value={formData.descripcion}
@@ -240,8 +251,13 @@ const TrajeForm: React.FC = () => {
                   rows={4}
                   required
                 />
+                {validationErrors.descripcion && (
+                  <div className="invalid-feedback">
+                    {validationErrors.descripcion}
+                  </div>
+                )}
                 <div className="form-text">
-                  Proporciona una descripción detallada del traje.
+                  Proporciona una descripción detallada del traje (mínimo 10 caracteres, máximo 500).
                 </div>
               </div>
 
@@ -254,7 +270,7 @@ const TrajeForm: React.FC = () => {
                 </label>
                 <input
                   type="number"
-                  className="form-control form-control-lg"
+                  className={`form-control form-control-lg ${validationErrors.precio ? 'is-invalid' : ''}`}
                   id="precio"
                   name="precio"
                   value={formData.precio}
@@ -262,10 +278,16 @@ const TrajeForm: React.FC = () => {
                   placeholder="0.00"
                   step="0.01"
                   min="0"
+                  max="10000"
                   required
                 />
+                {validationErrors.precio && (
+                  <div className="invalid-feedback">
+                    {validationErrors.precio}
+                  </div>
+                )}
                 <div className="form-text">
-                  Introduce el precio estimado del traje en euros.
+                  Introduce el precio estimado del traje en euros (entre 0 y 10,000€).
                 </div>
               </div>
 

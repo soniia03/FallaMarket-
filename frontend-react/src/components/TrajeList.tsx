@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useTrajes } from '../hooks/useTrajes';
+import { Link, useNavigate } from 'react-router-dom';
+import { useTrajes } from '../components2/useTrajes';
 import { Traje } from '../types';
+import TrajeCard from '../components2/TrajeCard';
 
 
 const TrajeList: React.FC = () => {
+  const navigate = useNavigate();
   const { trajes, loading, error, deleteTraje, pagination, currentPage, itemsPerPage, changePage, changeItemsPerPage } = useTrajes();
   const [searchTerm, setSearchTerm] = useState<string>('');
 
@@ -14,26 +16,6 @@ const TrajeList: React.FC = () => {
     traje.material.toLowerCase().includes(searchTerm.toLowerCase()) ||
     traje.propietario.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-
-  const handleDelete = async (id: string, nombre: string): Promise<void> => {
-    if (window.confirm(`¿Estás seguro de que quieres eliminar el traje "${nombre}"?`)) {
-      try {
-        await deleteTraje(id);
-      } catch (error) {
-        alert(`Error al eliminar el traje: ${(error as Error).message}`);
-      }
-    }
-  };
-
-
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
 
 
   if (loading) {
@@ -105,125 +87,19 @@ const TrajeList: React.FC = () => {
         <div className="row">
           {filteredTrajes.map((traje: Traje) => (
             <div key={traje._id} className="col-lg-6 mb-4">
-              <div className="card h-100 shadow-sm border-0">
-                <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-start mb-3">
-                    <h5 className="card-title text-primary fw-bold">
-                      <i className="fas fa-tshirt me-2"></i>
-                      {traje.nombre}
-                    </h5>
-                    <div className="dropdown">
-                      <button className="btn btn-outline-secondary btn-sm dropdown-toggle"
-                              type="button"
-                              data-bs-toggle="dropdown">
-                        <i className="fas fa-ellipsis-v"></i>
-                      </button>
-                      <ul className="dropdown-menu">
-                        <li>
-                          <Link to={`/trajes/${traje._id}`} className="dropdown-item">
-                            <i className="fas fa-eye me-2"></i>Ver detalles
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to={`/trajes/edit/${traje._id}`} className="dropdown-item">
-                            <i className="fas fa-edit me-2"></i>Editar
-                          </Link>
-                        </li>
-                        <li><hr className="dropdown-divider" /></li>
-                        <li>
-                          <button
-                            className="dropdown-item text-danger"
-                            onClick={() => handleDelete(traje._id, traje.nombre)}
-                          >
-                            <i className="fas fa-trash me-2"></i>Eliminar
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
-
-                  <div className="row mb-3">
-                    <div className="col-sm-6">
-                      <small className="text-muted">Material:</small>
-                      <p className="mb-2">
-                        <span className="badge bg-info text-dark">
-                          <i className="fas fa-fabric me-1"></i>
-                          {traje.material}
-                        </span>
-                      </p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small className="text-muted">Propietario:</small>
-                      <p className="mb-2">
-                        <span className="badge bg-success">
-                          <i className="fas fa-user me-1"></i>
-                          {traje.propietario}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-
-
-                  <div className="mb-3">
-                    <small className="text-muted">Descripción:</small>
-                    <p className="mb-2 text-dark">
-                      {traje.descripcion && traje.descripcion.length > 100
-                        ? `${traje.descripcion.substring(0, 100)}...`
-                        : traje.descripcion || 'Sin descripción'}
-                    </p>
-                  </div>
-
-
-                  {/* Precio y Disponibilidad */}
-                  <div className="row mb-3">
-                    <div className="col-sm-6">
-                      <small className="text-muted">Precio:</small>
-                      <p className="mb-2">
-                        <span className="badge bg-warning text-dark">
-                          <i className="fas fa-euro-sign me-1"></i>
-                          {traje.precio ? traje.precio.toFixed(2) : '0.00'}
-                        </span>
-                      </p>
-                    </div>
-                    <div className="col-sm-6">
-                      <small className="text-muted">Estado:</small>
-                      <p className="mb-2">
-                        <span className={`badge ${traje.disponible ? 'bg-success' : 'bg-danger'}`}>
-                          <i className={`fas ${traje.disponible ? 'fa-check-circle' : 'fa-times-circle'} me-1`}></i>
-                          {traje.disponible ? 'Disponible' : 'No disponible'}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-
-
-                  <div className="text-muted small">
-                    <div className="d-flex justify-content-between">
-                      <span>
-                        <i className="fas fa-calendar-plus me-1"></i>
-                        Creado: {formatDate(traje.createdAt)}
-                      </span>
-                      {traje.updatedAt !== traje.createdAt && (
-                        <span>
-                          <i className="fas fa-edit me-1"></i>
-                          Actualizado: {formatDate(traje.updatedAt)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="card-footer bg-transparent">
-                  <div className="d-flex gap-2">
-                    <Link to={`/trajes/${traje._id}`} className="btn btn-outline-primary btn-sm flex-grow-1">
-                      <i className="fas fa-eye me-1"></i>Ver
-                    </Link>
-                    <Link to={`/trajes/edit/${traje._id}`} className="btn btn-outline-warning btn-sm flex-grow-1">
-                      <i className="fas fa-edit me-1"></i>Editar
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              <TrajeCard 
+                traje={traje}
+                showActions={true}
+                onDelete={async (id) => {
+                  try {
+                    await deleteTraje(id);
+                  } catch (error) {
+                    alert(`Error al eliminar el traje: ${(error as Error).message}`);
+                  }
+                }}
+                onEdit={(id) => navigate(`/trajes/edit/${id}`)}
+                className="shadow-sm"
+              />
             </div>
           ))}
         </div>
