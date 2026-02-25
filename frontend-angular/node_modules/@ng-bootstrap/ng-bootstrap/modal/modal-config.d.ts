@@ -79,6 +79,14 @@ export interface NgbModalOptions {
      */
     keyboard?: boolean;
     /**
+     * `role` attribute value to set on the modal window.
+     *
+     * Default value is `dialog`.
+     *
+     * @since 18.0.0
+     */
+    role?: 'alertdialog' | 'dialog';
+    /**
      * Scrollable modal content (false by default).
      *
      * @since 5.0.0
@@ -131,6 +139,7 @@ export declare class NgbModalConfig implements Required<NgbModalOptions> {
     fullscreen: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | boolean | string;
     injector: Injector;
     keyboard: boolean;
+    role: 'alertdialog' | 'dialog';
     scrollable: boolean;
     size: 'sm' | 'lg' | 'xl' | string;
     windowClass: string;

@@ -1,6 +1,5 @@
 import { NgbDatepickerI18n } from '../datepicker-i18n';
 import { NgbDateStruct } from '../../index';
-import { TranslationWidth } from '@angular/common';
 import * as i0 from "@angular/core";
 /**
  * @since 3.2.0
@@ -8,7 +7,7 @@ import * as i0 from "@angular/core";
 export declare class NgbDatepickerI18nHebrew extends NgbDatepickerI18n {
     getMonthShortName(month: number, year?: number): string;
     getMonthFullName(month: number, year?: number): string;
-    getWeekdayLabel(weekday: number, width?: TranslationWidth): string;
+    getWeekdayLabel(weekday: number, width?: Intl.DateTimeFormatOptions['weekday']): string;
     getDayAriaLabel(date: NgbDateStruct): string;
     getDayNumerals(date: NgbDateStruct): string;
     getWeekNumerals(weekNumber: number): string;

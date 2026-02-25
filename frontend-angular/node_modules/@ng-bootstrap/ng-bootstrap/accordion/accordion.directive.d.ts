@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterContentInit, EventEmitter, OnDestroy } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, ElementRef, EventEmitter, OnDestroy } from '@angular/core';
 import { NgbCollapse } from '../collapse/collapse';
 import * as i0 from "@angular/core";
 import * as i1 from "../collapse/collapse";
@@ -11,17 +11,22 @@ import * as i1 from "../collapse/collapse";
  * @since 14.1.0
  */
 export declare class NgbAccordionBody implements AfterContentChecked, OnDestroy {
-    private _vcr;
-    private _element;
     private _item;
     private _viewRef;
+    /**
+     * the `ElementRef` of the component
+     *
+     * @since 18.0.0
+     */
+    readonly elementRef: ElementRef<any>;
+    private _vcr;
     private _bodyTpl;
     ngAfterContentChecked(): void;
     ngOnDestroy(): void;
     private _destroyViewIfExists;
     private _createViewIfNotExists;
     static ɵfac: i0.ɵɵFactoryDeclaration<NgbAccordionBody, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<NgbAccordionBody, "[ngbAccordionBody]", never, {}, {}, ["_bodyTpl"], never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<NgbAccordionBody, "[ngbAccordionBody]", never, {}, {}, ["_bodyTpl"], ["*"], true, never>;
 }
 /**
  * A directive that wraps the collapsible item's content of the accordion.

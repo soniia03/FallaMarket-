@@ -19,9 +19,9 @@ export interface NgbToastOptions {
      *
      * Could be one of these 2 values (as string):
      * - `polite` (default)
-     * - `alert`
+     * - `assertive`
      */
-    ariaLive?: 'polite' | 'alert';
+    ariaLive?: 'polite' | 'assertive';
 }
 /**
  * Configuration service for the NgbToast component. You can inject this service, typically in your root component,
@@ -35,7 +35,7 @@ export declare class NgbToastConfig implements NgbToastOptions {
     private _animation;
     autohide: boolean;
     delay: number;
-    ariaLive: 'polite' | 'alert';
+    ariaLive: 'polite' | 'assertive';
     get animation(): boolean;
     set animation(animation: boolean);
     static ɵfac: i0.ɵɵFactoryDeclaration<NgbToastConfig, never>;
