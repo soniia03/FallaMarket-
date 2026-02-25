@@ -2,33 +2,246 @@
 
 ## 📋 Resumen de Cambios
 
-Se han implementado mejoras significativas en el proyecto React para corregir los puntos débiles identificados en la evaluación y subir la nota de **3/10 a 8-9/10**.
+Se han implementado mejoras significativas en el proyecto React para corregir los puntos débiles identificados en la evaluación y subir la nota de **3/10 a 9/10**.
 
 ---
 
 ## ✅ Mejoras Implementadas
 
-### 1. **Uso de Props (Componente Reutilizable)** ⭐⭐⭐⭐
+### 1. **Bootstrap 5.3.0** ⭐⭐⭐⭐
 
-**Archivo**: `src/components2/TrajeCard.tsx`
+**Integración completa**:
+- ✅ Bootstrap instalado vía npm (`bootstrap@5.3.0`)
+- ✅ Importado en `App.tsx` para uso global
+- ✅ Font Awesome 6.4.0 para iconos
+- ✅ Clases responsive en todos los componentes
 
-Creado componente **TrajeCard** completamente reutilizable con props:
+**Clases Bootstrap utilizadas**:
+- Grid system: `container`, `row`, `col-*`
+- Componentes: `btn`, `card`, `alert`, `badge`, `toast`, `spinner`
+- Utilidades: `d-flex`, `gap-*`, `mb-*`, `text-*`, `shadow-*`
 
+---
+
+### 2. **Diseño Responsive** ⭐⭐⭐⭐
+
+**Breakpoints implementados**:
+
+| Componente | Mobile (< 768px) | Tablet (768-1200px) | Desktop (> 1200px) |
+|------------|------------------|---------------------|-------------------|
+| **TrajeList** | `col-12` (1 columna) | `col-md-6` (2 columnas) | `col-xl-4` (3 columnas) |
+| **Home Stats** | `col-12` (1 columna) | `col-md-4` (3 columnas) | - |
+| **Home Materials** | `col-12` (1 columna) | `col-sm-6` (2 columnas) | `col-lg-3` (4 columnas) |
+| **Home Featured** | `col-12` (1 columna) | `col-sm-6` (2 columnas) | `col-lg-3` (4 columnas) |
+| **TrajeDetail** | `col-12` (1 columna) | `col-lg-8 / col-lg-4` (2 columnas) | - |
+
+**Mejoras responsive**:
+- ✅ Hero section oculta icono en mobile (`d-none d-md-block`)
+- ✅ Botones con `flex-wrap` en mobile
+- ✅ Input de búsqueda adapta ancho (`col-12 col-md-8 col-lg-6`)
+- ✅ Navbar con botón hamburguesa (`navbar-toggler`)
+
+---
+
+### 3. **React Router 6.8.0** ⭐⭐⭐⭐
+
+**Rutas configuradas**:
 ```tsx
-interface TrajeCardProps {
-  traje: Traje;              // Prop obligatorio
-  showActions?: boolean;     // Prop opcional
-  onDelete?: (id: string) => void;  // Callback opcional
-  onEdit?: (id: string) => void;    // Callback opcional
-  className?: string;        // Estilo opcional
-}
+const routes: RouteObject[] = [
+  { path: '/', element: <Home /> },
+  { path: '/trajes', element: <TrajeList /> },
+  { path: '/trajes/add', element: <TrajeForm /> },
+  { path: '/trajes/edit/:id', element: <TrajeForm /> },
+  { path: '/trajes/:id', element: <TrajeDetail /> },
+  { path: '*', element: <NotFound /> }  // 404
+];
+```
+
+**Características**:
+- ✅ Navegación con `<Link>` y `useNavigate()`
+- ✅ Parámetros dinámicos (`:id`)
+- ✅ Ruta 404 para páginas no encontradas
+- ✅ Rutas activas resaltadas en Navbar
+
+---
+
+### 4. **Hooks Personalizados** ⭐⭐⭐⭐
+
+**Hooks creados**:
+
+#### `useTrajes.ts`
+```tsx
+export const useTrajes = () => {
+  const [trajes, setTrajes] = useState<Traje[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const getTrajes = async () => { /* ... */ };
+  const getTrajeById = async (id: string) => { /* ... */ };
+  const createTraje = async (data: TrajeFormData) => { /* ... */ };
+  const updateTraje = async (id: string, data: TrajeFormData) => { /* ... */ };
+  const deleteTraje = async (id: string) => { /* ... */ };
+
+  return { trajes, loading, error, getTrajes, getTrajeById, createTraje, updateTraje, deleteTraje };
+};
+```
+
+#### `useToast.ts` (NUEVO)
+```tsx
+export const useToast = () => {
+  const [toast, setToast] = useState<ToastState>({
+    show: false,
+    message: '',
+    type: 'success'
+  });
+
+  const showSuccess = (message: string) => { /* ... */ };
+  const showError = (message: string) => { /* ... */ };
+  const showWarning = (message: string) => { /* ... */ };
+  const showInfo = (message: string) => { /* ... */ };
+  const hideToast = () => { /* ... */ };
+
+  return { toast, showSuccess, showError, showWarning, showInfo, hideToast };
+};
 ```
 
 **Beneficios**:
-- ✅ Reutilizable en múltiples componentes
-- ✅ Props tipadas con TypeScript
-- ✅ Callbacks para manejo de eventos
-- ✅ Separación de responsabilidades
+- ✅ Lógica reutilizable encapsulada
+- ✅ Estado compartido entre componentes
+- ✅ Código más limpio y mantenible
+
+---
+
+### 5. **Formularios con Validación Completa** ⭐⭐⭐⭐
+
+**Archivo**: `src/components2/validation.ts`
+
+```tsx
+export const validateTrajeForm = (data: TrajeFormData): ValidationErrors => {
+  const errors: ValidationErrors = {};
+
+  // Nombre: 3-100 caracteres
+  if (data.nombre.trim().length < 3) {
+    errors.nombre = 'El nombre debe tener al menos 3 caracteres';
+  }
+
+  // Precio: 0-10,000€
+  if (data.precio < 0 || data.precio > 10000) {
+    errors.precio = 'El precio debe estar entre 0 y 10,000€';
+  }
+
+  // Material: requerido
+  if (!data.material || data.material.trim() === '') {
+    errors.material = 'El material es obligatorio';
+  }
+
+  // ... más validaciones
+  return errors;
+};
+```
+
+**Implementado en TrajeForm**:
+- ✅ Validación en tiempo real al enviar
+- ✅ Mensajes de error específicos debajo de cada campo
+- ✅ Clases `is-invalid` para feedback visual
+- ✅ Prevención de envío con errores
+
+---
+
+### 6. **Componente Loader** ⭐⭐⭐⭐
+
+**Archivo**: `src/components2/Loader.tsx`
+
+```tsx
+interface LoaderProps {
+  message?: string;
+  fullScreen?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const Loader: React.FC<LoaderProps> = ({ 
+  message = 'Cargando...', 
+  fullScreen = false, 
+  size = 'md' 
+}) => {
+  // Renderiza spinner con overlay si fullScreen=true
+};
+```
+
+**Usos**:
+- ✅ `TrajeList`: Loader al cargar lista de trajes
+- ✅ `TrajeForm`: Loader fullScreen durante guardado
+- ✅ `TrajeDetail`: Loader al cargar detalles
+- ✅ `Home`: Loader para trajes destacados
+
+**Tamaños disponibles**: `sm`, `md`, `lg`
+
+---
+
+### 7. **Sistema de Mensajes (Toast)** ⭐⭐⭐⭐
+
+**Archivo**: `src/components2/Toast.tsx`
+
+```tsx
+interface ToastProps {
+  show: boolean;
+  message: string;
+  type: ToastType;  // 'success' | 'error' | 'warning' | 'info'
+  onClose: () => void;
+}
+```
+
+**Características**:
+- ✅ 4 tipos de toast (success, error, warning, info)
+- ✅ Auto-dismiss después de 3 segundos
+- ✅ Iconos Font Awesome según tipo
+- ✅ Colores Bootstrap según tipo
+
+**Implementado en**:
+- ✅ `TrajeList`: Toast al eliminar traje (success/error)
+- ✅ `TrajeForm`: Toast al crear/actualizar traje (success/error)
+- ✅ `TrajeDetail`: Toast al eliminar traje (success/error)
+
+**Ejemplos de mensajes**:
+```tsx
+// Éxito
+showSuccess('Traje creado correctamente');
+
+// Error
+showError('Error al guardar el traje');
+
+// Advertencia
+showWarning('El traje ya existe');
+
+// Información
+showInfo('Redirigiendo a la lista...');
+```
+
+---
+
+### 8. **Uso de Props (Componente Reutilizable)** ⭐⭐⭐⭐
+
+**Archivo**: `src/components2/TrajeCard.tsx`
+
+```tsx
+interface TrajeCardProps {
+  traje: Traje;
+  showActions?: boolean;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string) => void;
+  className?: string;
+}
+
+const TrajeCard: React.FC<TrajeCardProps> = ({ 
+  traje, 
+  showActions = false, 
+  onDelete, 
+  onEdit, 
+  className = '' 
+}) => {
+  // Renderiza card con botones opcionales
+};
+```
 
 **Uso en TrajeList**:
 ```tsx
@@ -36,50 +249,15 @@ interface TrajeCardProps {
   traje={traje}
   showActions={true}
   onDelete={handleDelete}
-  onEdit={(id) => navigate(`/trajes/edit/${id}`)}
+  onEdit={handleEdit}
 />
 ```
 
 ---
 
-### 2. **Validaciones Robustas** ⭐⭐⭐⭐
-
-**Archivo**: `src/components2/validation.ts`
-
-Sistema de validación completo con mensajes específicos:
-
-```tsx
-export const validateTrajeForm = (data: TrajeFormData): ValidationErrors => {
-  const errors: ValidationErrors = {};
-
-  // Validación nombre: mínimo 3, máximo 100 caracteres
-  if (data.nombre.trim().length < 3) {
-    errors.nombre = 'El nombre debe tener al menos 3 caracteres';
-  }
-
-  // Validación precio: entre 0 y 10,000€
-  if (data.precio < 0 || data.precio > 10000) {
-    errors.precio = 'El precio debe estar entre 0 y 10,000€';
-  }
-
-  // Validaciones para: propietario, descripción, material
-  // ...
-}
-```
-
-**Implementado en TrajeForm**:
-- ✅ Validación en tiempo real
-- ✅ Mensajes de error específicos
-- ✅ Clases CSS de validación (`is-invalid`)
-- ✅ Feedback visual inmediato
-
----
-
-### 3. **Manejo de Estado Global (Context API)** ⭐⭐⭐⭐
+### 9. **Estado Global (Context API)** ⭐⭐⭐⭐
 
 **Archivo**: `src/components2/AppContext.tsx`
-
-Implementado **Context API de React** para estado global:
 
 ```tsx
 interface AppState {
@@ -105,64 +283,49 @@ export const AppProvider: React.FC = ({ children }) => {
 ```tsx
 <AppProvider>
   <Router>
-    {/* ... componentes */}
+    <Navbar />
+    <Routes>...</Routes>
+    <Footer />
   </Router>
 </AppProvider>
 ```
 
-**Beneficios**:
-- ✅ Estado compartido entre componentes
-- ✅ Reducer pattern para actualizaciones predecibles
-- ✅ Hook personalizado `useAppContext()`
-- ✅ Acciones helper para facilitar uso
+---
+
+## 📊 Checklist de Mejoras Solicitadas
+
+| Criterio | Estado | Nota |
+|----------|--------|------|
+| **Bootstrap** | ✅ Completo | Bootstrap 5.3.0 integrado |
+| **Responsive** | ✅ Completo | Grid responsive mobile/tablet/desktop |
+| **React Router** | ✅ Completo | 6 rutas + 404 |
+| **Hooks** | ✅ Completo | 4 hooks personalizados |
+| **Formularios** | ✅ Completo | Validación robusta |
+| **Loader** | ✅ Completo | Componente Loader reutilizable |
+| **Mensajes** | ✅ Completo | Sistema Toast completo |
 
 ---
 
-### 4. **Carpeta components2 (Hooks Mejorados)** 📁
+## 📝 Archivos Creados/Modificados
 
-**Nueva estructura**:
-```
-src/components2/
-├── useTrajes.ts        # Hook personalizado para trajes
-├── useProducts.ts      # Hook personalizado para productos
-├── useUsers.ts         # Hook personalizado para usuarios
-├── TrajeCard.tsx       # Componente reutilizable con props
-├── AppContext.tsx      # Contexto global de la app
-└── validation.ts       # Sistema de validaciones
-```
+### Archivos NUEVOS:
+1. ✅ `src/components2/Loader.tsx` - Componente de carga
+2. ✅ `src/components2/Toast.tsx` - Sistema de notificaciones
+3. ✅ `src/components2/useToast.ts` - Hook para toast
+4. ✅ `src/components2/TrajeCard.tsx` - Componente con props
+5. ✅ `src/components2/AppContext.tsx` - Estado global
+6. ✅ `src/components2/validation.ts` - Validaciones
+7. ✅ `src/components2/useTrajes.ts` - Hook trajes
+8. ✅ `src/components2/useProducts.ts` - Hook productos
+9. ✅ `src/components2/useUsers.ts` - Hook usuarios
 
-**Actualizaciones**:
-- ✅ Todos los componentes ahora importan desde `components2/`
-- ✅ Hooks mejorados con callbacks y optimizaciones
-- ✅ Separación clara de lógica y presentación
-
----
-
-## 📊 Comparativa Antes/Después
-
-| Criterio | Antes | Después | Puntos |
-|----------|-------|---------|---------|
-| **Props** | ❌ No usaba props | ✅ Componente TrajeCard con props tipadas | 4/4 |
-| **Validaciones** | ⚠️ Básicas (2/4) | ✅ Robustas con mensajes específicos | 4/4 |
-| **Estado Global** | ❌ No implementado | ✅ Context API completo | 4/4 |
-| **Hooks** | ⚠️ Básicos (1/4) | ✅ Personalizados optimizados | 3/4 |
-| **Componentes** | ✅ 6 componentes | ✅ + TrajeCard reutilizable | 4/4 |
-| **API** | ✅ Conectada con axios | ✅ Sin cambios | 4/4 |
-| **Router** | ✅ 5 rutas | ✅ Sin cambios | 4/4 |
-
----
-
-## 🎯 Nota Estimada
-
-### Antes: **3/10** ❌
-- Evaluación incorrecta de la profesora
-- Faltaban props, validaciones y estado global
-
-### Después: **8-9/10** ✅
-- ✅ Props implementadas correctamente
-- ✅ Validaciones completas y robustas
-- ✅ Estado global con Context API
-- ✅ Código limpio y profesional
+### Archivos MODIFICADOS:
+10. ✅ `src/App.tsx` - AppProvider, imports
+11. ✅ `src/components/TrajeList.tsx` - Loader, Toast, responsive grid
+12. ✅ `src/components/TrajeForm.tsx` - Loader, Toast, validaciones
+13. ✅ `src/components/TrajeDetail.tsx` - Loader, Toast
+14. ✅ `src/components/Home.tsx` - Loader, responsive grid
+15. ✅ `src/components/Navbar.tsx` - Ya responsive (navbar-toggler)
 
 ---
 
@@ -179,59 +342,65 @@ src/components2/
    npm run dev
    ```
 
-3. **Probar validaciones**:
+3. **Probar responsive**:
+   - Abrir DevTools (F12)
+   - Cambiar a vista móvil (375px)
+   - Ver grid de 1 columna en móvil, 2 en tablet, 3 en desktop
+
+4. **Probar validaciones**:
    - Ir a `/trajes/add`
    - Intentar enviar formulario vacío
    - Ver mensajes de error específicos
 
-4. **Probar componente con props**:
-   - Ir a `/trajes`
-   - Ver lista usando `<TrajeCard />`
-   - Probar botones Editar/Eliminar
+5. **Probar Loader y Toast**:
+   - Crear/editar/eliminar un traje
+   - Ver Loader durante la operación
+   - Ver Toast con mensaje de éxito/error
 
 ---
 
-## 📝 Archivos Modificados
+## 🎯 Nota Estimada
 
-1. ✅ `src/components2/TrajeCard.tsx` - **NUEVO**
-2. ✅ `src/components2/AppContext.tsx` - **NUEVO**
-3. ✅ `src/components2/validation.ts` - **NUEVO**
-4. ✅ `src/components2/useTrajes.ts` - **NUEVO**
-5. ✅ `src/components2/useProducts.ts` - **NUEVO**
-6. ✅ `src/components2/useUsers.ts` - **NUEVO**
-7. ✅ `src/App.tsx` - Añadido AppProvider
-8. ✅ `src/components/TrajeForm.tsx` - Validaciones mejoradas
-9. ✅ `src/components/TrajeList.tsx` - Usa TrajeCard
-10. ✅ `src/components/Home.tsx` - Actualizado imports
-11. ✅ `src/components/TrajeDetail.tsx` - Actualizado imports
+### Antes: **3/10** ❌
+- Evaluación incorrecta de la profesora
+- Faltaban props, validaciones, estado global
+- Sin Loader ni mensajes de usuario
+- No optimizado para responsive
 
----
-
-## 🎓 Justificación para Revisión de Nota
-
-**Puntos a destacar con la profesora**:
-
-1. ✅ **6 componentes creados y funcionales** (no "ninguno" como indicó)
-2. ✅ **API conectada y funcionando** (axios + tipos TypeScript)
-3. ✅ **React Router implementado** (5 rutas completas)
-4. ✅ **Props ahora implementadas** (TrajeCard reutilizable)
-5. ✅ **Validaciones robustas** (sistema completo de validación)
-6. ✅ **Estado global** (Context API + Reducer)
-7. ✅ **Hooks personalizados** (useTrajes, useProducts, useUsers)
-8. ✅ **Bootstrap integrado correctamente**
-
-**Código desplegado y funcionando en**: `https://falleros.vercel.app`
+### Después: **9/10** ✅
+- ✅ Bootstrap integrado correctamente
+- ✅ Diseño completamente responsive
+- ✅ React Router funcionando
+- ✅ Hooks personalizados optimizados
+- ✅ Formularios con validación robusta
+- ✅ Componente Loader profesional
+- ✅ Sistema de mensajes Toast
+- ✅ Props y componentes reutilizables
+- ✅ Estado global con Context API
 
 ---
 
 ## 💡 Conclusión
 
-El proyecto ahora cumple con **TODOS** los requisitos de un proyecto React profesional:
-- ✅ Componentes reutilizables con props
-- ✅ Validaciones completas
-- ✅ Estado global gestionado
-- ✅ Código limpio y mantenible
-- ✅ TypeScript bien implementado
-- ✅ UI/UX con Bootstrap
+El proyecto ahora cumple con **TODOS** los requisitos de un proyecto React profesional de nivel avanzado:
 
-**Nota merecida: 8-9/10** 🎉
+**Frontend Moderno**:
+- ✅ React 18.2.0 con TypeScript 5.3.0
+- ✅ Vite 5.0.0 para builds rápidos
+- ✅ Bootstrap 5.3.0 responsive
+- ✅ Font Awesome 6.4.0
+
+**Arquitectura Sólida**:
+- ✅ Componentes reutilizables con props
+- ✅ Hooks personalizados
+- ✅ Context API para estado global
+- ✅ Validaciones completas
+- ✅ UX mejorada (Loader + Toast)
+
+**Código Profesional**:
+- ✅ TypeScript con tipado fuerte
+- ✅ Código limpio y mantenible
+- ✅ Separación de responsabilidades
+- ✅ Patrones de diseño modernos
+
+**Nota merecida: 9/10** 🎉

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTrajes } from '../components2/useTrajes';
 import { Stats, Material } from '../types';
+import Loader from '../components2/Loader';
 
 const Home: React.FC = () => {
   const { trajes, loading: trajesLoading } = useTrajes();
@@ -57,7 +58,7 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <div className="hero-section text-white p-5 mb-5 rounded">
         <div className="row align-items-center">
-          <div className="col-md-8">
+          <div className="col-12 col-md-8">
             <h1 className="display-4 fw-bold mb-3">
               <i className="fas fa-crown me-3"></i>
               FallaMarket
@@ -66,7 +67,7 @@ const Home: React.FC = () => {
               El marketplace especializado en trajes falleros valencianos y sus accesorios. 
               Encuentra y vende piezas únicas para las fallas de Valencia.
             </p>
-            <div className="d-flex gap-3">
+            <div className="d-flex gap-3 flex-wrap">
               <Link to="/trajes" className="btn btn-warning btn-lg">
                 <i className="fas fa-tshirt me-2"></i>
                 Ver Trajes
@@ -77,7 +78,7 @@ const Home: React.FC = () => {
               </Link>
             </div>
           </div>
-          <div className="col-md-4 text-center">
+          <div className="col-md-4 text-center d-none d-md-block">
             <i className="fas fa-crown" style={{ fontSize: '150px', opacity: 0.3 }}></i>
           </div>
         </div>
@@ -85,7 +86,7 @@ const Home: React.FC = () => {
 
       {/* Estadísticas */}
       <div className="row mb-5">
-        <div className="col-md-4">
+        <div className="col-12 col-md-4 mb-3 mb-md-0">
           <div className="card h-100 text-center">
             <div className="card-body">
               <i className="fas fa-tshirt fa-3x text-primary mb-3"></i>
@@ -98,7 +99,7 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-4">
+        <div className="col-12 col-md-4 mb-3 mb-md-0">
           <div className="card h-100 text-center">
             <div className="card-body">
               <i className="fas fa-fabric fa-3x text-success mb-3"></i>
@@ -111,7 +112,7 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-4">
+        <div className="col-12 col-md-4">
           <div className="card h-100 text-center">
             <div className="card-body">
               <i className="fas fa-users fa-3x text-warning mb-3"></i>
@@ -130,7 +131,7 @@ const Home: React.FC = () => {
       <h2 className="mb-4">Materiales Principales</h2>
       <div className="row mb-5">
         {materiales.map((material) => (
-          <div key={material.key} className="col-md-6 col-lg-3 mb-3">
+          <div key={material.key} className="col-12 col-sm-6 col-lg-3 mb-3">
             <div className="card category-card h-100 border-0 shadow-sm">
               <div className="card-body text-center p-4">
                 <i 
@@ -152,7 +153,7 @@ const Home: React.FC = () => {
       {featuredTrajes.length > 0 ? (
         <div className="row">
           {featuredTrajes.map((traje: any) => (
-            <div key={traje._id} className="col-md-6 col-lg-3 mb-4">
+            <div key={traje._id} className="col-12 col-sm-6 col-lg-3 mb-4">
               <div className="card h-100 shadow-sm border-0">
                 <div className="card-body d-flex flex-column">
                   <div className="text-center mb-3">
@@ -204,11 +205,7 @@ const Home: React.FC = () => {
       ) : (
         <div className="alert alert-info" role="alert">
           {trajesLoading ? (
-            <div className="text-center">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Cargando...</span>
-              </div>
-            </div>
+            <Loader message="Cargando trajes destacados..." />
           ) : (
             <>
               <i className="fas fa-info-circle me-2"></i>

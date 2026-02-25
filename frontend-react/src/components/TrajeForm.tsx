@@ -3,6 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTrajes } from '../components2/useTrajes';
 import { TrajeFormData } from '../types';
 import { validateTrajeForm, hasValidationErrors, ValidationErrors } from '../components2/validation';
+import Loader from '../components2/Loader';
+import Toast from '../components2/Toast';
+import { useToast } from '../components2/useToast';
 
 
 const TrajeForm: React.FC = () => {
@@ -10,6 +13,7 @@ const TrajeForm: React.FC = () => {
   const navigate = useNavigate();
   const { createTraje, updateTraje, getTrajeById } = useTrajes();
   const isEdit = Boolean(id);
+  const { toast, showSuccess, showError, hideToast } = useToast();
 
 
   const [formData, setFormData] = useState<TrajeFormData>({
@@ -88,6 +92,7 @@ const TrajeForm: React.FC = () => {
     if (hasValidationErrors(errors)) {
       setValidationErrors(errors);
       setError('Por favor, corrige los errores en el formulario.');
+      showError('Por favor, corrige los errores en el formulario.');
       return;
     }
 
@@ -96,12 +101,16 @@ const TrajeForm: React.FC = () => {
       setLoading(true);
       if (isEdit && id) {
         await updateTraje(id, formData);
+        showSuccess('Traje actualizado correctamente');
       } else {
         await createTraje(formData);
+        showSuccess('Traje creado correctamente');
       }
-      navigate('/trajes');
+      setTimeout(() => navigate('/trajes'), 1500);
     } catch (err) {
-      setError((err as Error).message);
+      const errorMsg = (err as Error).message;
+      setError(errorMsg);
+      showError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -121,18 +130,31 @@ const TrajeForm: React.FC = () => {
     'Otro'
   ];
 
+  if (loading && isEdit) {
+    return <Loader message="Cargando datos del traje..." />;
+  }
 
   return (
-    <div className="row justify-content-center">
-      <div className="col-lg-8">
-        <div className="card border-0 shadow">
-          <div className="card-header bg-primary text-white">
-            <h3 className="card-title mb-0">
-              <i className={`fas ${isEdit ? 'fa-edit' : 'fa-plus'} me-2`}></i>
-              {isEdit ? 'Editar Traje' : 'Agregar Nuevo Traje'}
-            </h3>
-          </div>
-          <div className="card-body">
+    <>
+      <Toast 
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onClose={hideToast}
+      />
+      
+      {loading && <Loader message="Guardando..." fullScreen />}
+      
+      <div className="row justify-content-center">
+        <div className="col-12 col-lg-10 col-xl-8">
+          <div className="card border-0 shadow">
+            <div className="card-header bg-primary text-white">
+              <h3 className="card-title mb-0">
+                <i className={`fas ${isEdit ? 'fa-edit' : 'fa-plus'} me-2`}></i>
+                {isEdit ? 'Editar Traje' : 'Agregar Nuevo Traje'}
+              </h3>
+            </div>
+            <div className="card-body p-4">
             {error && (
               <div className="alert alert-danger" role="alert">
                 <i className="fas fa-exclamation-triangle me-2"></i>
@@ -368,6 +390,7 @@ const TrajeForm: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

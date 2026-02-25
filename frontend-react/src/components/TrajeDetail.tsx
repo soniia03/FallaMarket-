@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTrajes } from '../components2/useTrajes';
 import { Traje } from '../types';
+import Loader from '../components2/Loader';
+import Toast from '../components2/Toast';
+import { useToast } from '../components2/useToast';
 
 
 const TrajeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { getTrajeById, deleteTraje } = useTrajes();
+  const { toast, showSuccess, showError, hideToast } = useToast();
  
   const [traje, setTraje] = useState<Traje | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -41,10 +45,11 @@ const TrajeDetail: React.FC = () => {
       try {
         if (id) {
           await deleteTraje(id);
-          navigate('/trajes');
+          showSuccess('Traje eliminado correctamente');
+          setTimeout(() => navigate('/trajes'), 1500);
         }
       } catch (error) {
-        alert(`Error al eliminar el traje: ${(error as Error).message}`);
+        showError(`Error al eliminar el traje: ${(error as Error).message}`);
       }
     }
   };
@@ -79,14 +84,7 @@ const TrajeDetail: React.FC = () => {
 
 
   if (loading) {
-    return (
-      <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Cargando...</span>
-        </div>
-        <p className="mt-2">Cargando detalles del traje...</p>
-      </div>
-    );
+    return <Loader message="Cargando detalles del traje..." />;
   }
 
 
@@ -322,6 +320,13 @@ const TrajeDetail: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <Toast
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onClose={hideToast}
+      />
     </div>
   );
 };
