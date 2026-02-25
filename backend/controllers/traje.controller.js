@@ -9,36 +9,13 @@ trajeCtrl.getTrajes = async (req, res) => {
     try {
         // Obtener parámetros de paginación de la query
         const page = parseInt(req.query.page) || 1;
-        let limit = parseInt(req.query.limit) || 10;
-        
-        // Obtener el total de documentos
-        const total = await Traje.countDocuments();
-        
-        // Si limit es 0 o -1, devolver todos los datos sin paginación
-        if (limit === 0 || limit === -1) {
-            const trajes = await Traje.find()
-                .sort({ createdAt: -1 });
-            
-            return res.status(200).json({
-                status: trajes,
-                pagination: {
-                    total,
-                    page: 1,
-                    limit: total,
-                    totalPages: 1,
-                    hasNextPage: false,
-                    hasPrevPage: false
-                }
-            });
-        }
-        
-        // Limitar el máximo a 100 elementos por página
-        if (limit > 100) {
-            limit = 100;
-        }
+        const limit = parseInt(req.query.limit) || 10;
         
         // Calcular el skip
         const skip = (page - 1) * limit;
+        
+        // Obtener el total de documentos
+        const total = await Traje.countDocuments();
         
         // Obtener los trajes con paginación
         const trajes = await Traje.find()
@@ -63,11 +40,7 @@ trajeCtrl.getTrajes = async (req, res) => {
             }
         });
     } catch (err) {
-        console.error('Error al obtener trajes:', err);
-        return res.status(400).json({ 
-            status: 'Error al obtener los trajes',
-            message: err.message || 'Error desconocido'
-        });
+        return res.status(400).json({ status: err });
     }
 };
 
@@ -94,11 +67,7 @@ trajeCtrl.getTraje = async (req, res) => {
         }
         return res.status(200).json({ status: 'Traje encontrado correctamente', data });
     } catch (err) {
-        console.error('Error al obtener traje:', err);
-        return res.status(400).json({ 
-            status: 'Error al obtener el traje',
-            message: err.message || 'Error desconocido'
-        });
+        return res.status(400).json({ status: err });
     }
 };
 
@@ -121,11 +90,7 @@ trajeCtrl.addTraje = async (req, res) => {
         // enviamos el documento completo; incluirá createdAt/updatedAt automáticamente
         return res.status(200).json({status: 'Traje agregado correctamente', data: saved});
     } catch (err) {
-        console.error('Error al agregar traje:', err);
-        return res.status(400).json({ 
-            status: 'Error al agregar el traje',
-            message: err.message || 'Error desconocido'
-        });
+        return res.status(400).json({status: err});
     }
 };
 
@@ -161,11 +126,7 @@ trajeCtrl.updateTraje = async (req, res) => {
         }
         return res.status(200).json({ status: 'Traje actualizado correctamente', data });
     } catch (err) {
-        console.error('Error al actualizar traje:', err);
-        return res.status(400).json({ 
-            status: 'Error al actualizar el traje',
-            message: err.message || 'Error desconocido'
-        });
+        return res.status(400).json({ status: err });
     }
 };
 
@@ -192,11 +153,7 @@ trajeCtrl.deleteTraje = async (req, res) => {
         }
         return res.status(200).json({ status: 'Traje eliminado correctamente' });
     } catch (err) {
-        console.error('Error al eliminar traje:', err);
-        return res.status(400).json({ 
-            status: 'Error al eliminar el traje',
-            message: err.message || 'Error desconocido'
-        });
+        return res.status(400).json({ status: err });
     }
 };
 
